@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DiscordRichPresence" Version="1.6.1.70" />
+		<PackageReference Include="LibVLCSharp" Version="3.10.1" />
+		<PackageReference Include="Photino.NET" Version="4.0.16" />
+		<PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.23.1" />
+	</ItemGroup>
+
+	<!-- IMPORTANT: Copies HTML/CSS files to bin folder -->
+	<ItemGroup>
+		<None Update="wwwroot\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="wwwroot\img\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>
