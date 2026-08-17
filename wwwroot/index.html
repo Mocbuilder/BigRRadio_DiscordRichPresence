@@ -4,22 +4,147 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Big R Radio</title>
+  <style>
+    :root {
+      --main: #5e0000;
+      --white: #fffffa;
+      --black: #030300;
+      --text_color: var(--white);
+      --background_first_color: color-mix(in srgb, var(--main) 5%, var(--white));
+      --background_second_color: color-mix(in srgb, var(--main) 35%, var(--white));
+      --background_third_color: color-mix(in srgb, var(--main) 65%, var(--white));
+      --interactive_color: color-mix(in srgb, var(--main) 85%, var(--white));
+      --interactive_color_hover: color-mix(in srgb, var(--main) 85%, var(--black));
+      --contrast_color: color-mix(in srgb, var(--main) 95%, var(--black));
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background_first_color: color-mix(in srgb, var(--main) 5%, var(--black));
+        --background_second_color: color-mix(in srgb, var(--main) 35%, var(--black));
+        --background_third_color: color-mix(in srgb, var(--main) 65%, var(--black));
+        --interactive_color: color-mix(in srgb, var(--main) 85%, var(--black));
+        --interactive_color_hover: color-mix(in srgb, var(--main) 85%, var(--white));
+        --contrast_color: color-mix(in srgb, var(--main) 95%, var(--white));
+      }
+    }
+
+    * {
+      margin: 0px;
+      padding: 0px;
+      max-width: 100dvw;
+      list-style: none;
+      color: var(--text_color);
+      font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande","Lucida Sans Unicode", Geneva, Verdana, sans-serif, Times, serif;
+      font-size: clamp(16px, 0.25rem + 1vw, 1.5rem);
+      font-weight: bolder;
+      text-align: center;
+      outline: none;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    html,
+    body {
+      height: 100dvh;
+      width: 100dvw;
+    }
+
+    body {
+      display: grid;
+      background: radial-gradient(var(--background_second_color), var(--background_first_color) 100%);
+      justify-items: center;
+      align-items: center;
+    }
+
+    .app {
+      display: grid;
+      width: 20rem;
+      justify-items: center;
+      padding: 1rem;
+      border: 0.05rem solid var(--contrast_color);
+      border-radius: 0.5rem;
+      background: radial-gradient(var(--background_second_color), var(--background_third_color));
+      box-shadow: 0rem 0rem 1rem 0.5rem var(--background_second_color);
+      z-index: 0;
+    }
+
+    .headline {
+      font-size: 1.5rem;
+      text-decoration: underline double  var(--text_color);
+    }
+
+    #CoverImage {
+      display: grid;
+      height: auto;
+      width: 100%;
+      border-radius: 0.3rem;
+    }
+
+    .songInfoContainer {
+      display: grid;
+      width: 100%;
+      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      border: 0.05rem solid var(--contrast_color);
+      border-radius: 0.5rem;
+      background: radial-gradient(var(--interactive_color), var(--interactive_color_hover));
+    }
+
+    #PlayButton {
+      display: grid;
+      height: 2em;
+      width: 100%;
+      margin-bottom: 0.5rem;
+      align-content: center; 
+      border: 0.05rem solid var(--interactive_color_hover);
+      border-radius: 0.15rem;
+      background: var(--interactive_color);
+      transition: background 0.3s;
+      cursor: pointer;
+    }
+
+    #PlayButton:focus,
+    #PlayButton:hover {
+      border: 0.05rem solid var(--interactive_color);
+      background: var(--interactive_color_hover);
+    }
+
+    #VolumeSlider {
+      display: grid;
+      width: 100%;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    #VolumeSlider::-webkit-slider-runnable-track,
+    #VolumeSlider::-moz-range-track {
+      background: linear-gradient(90deg, var(--interactive_color) 0%, var(--interactive_color_hover) 50%, var(--interactive_color) 100%);
+      border: 0.05rem solid var(--contrast_color);
+      border-radius: 0.5rem;
+      height: 0.3rem;
+    }
+
+    #Volume:hover #VolumeSlider::-webkit-slider-thumb,
+    #VolumeSlider::-moz-range-thumb {
+      background: var(--text_color);
+      border: 0.05rem solid var(--contrast_color);
+    }
+  </style>
 </head>
 <body>
-  <h3>⚡ 80s Metal FM ⚡</h3>
-
-  <div class="card">
-    <div class="song" id="song">Connecting...</div>
-    <div class="artist" id="artist">Please wait...</div>
-  </div>
-
-  <div class="controls">
-    <button id="playBtn" onclick="togglePlay()">Pause</button>
-    <div class="volume-container">
-      <span>Volume</span>
-      <input type="range" min="0" max="100" value="100" oninput="setVolume(this.value)">
-    </div>
-  </div>
+  <main class="app">
+    <h1 class="headline">⚡ 80s Metal FM ⚡</h1>
+    <img id="CoverImage" src="./img/logo_bigrradio.png" alt="Cover Image">
+      <div class="songInfoContainer">
+        <p id="song">Test</p>
+        <p id="artist">Tester</p>
+      </div>
+    <button id="PlayButton">Pause</button>
+    <input id="VolumeSlider" type="range" min="0" max="100" value="100">
+  </main>
 
   <script>
     let isPlaying = true;
