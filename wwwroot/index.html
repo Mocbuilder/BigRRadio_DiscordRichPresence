@@ -72,6 +72,7 @@
     .headline {
       font-size: 1.5rem;
       text-decoration: underline double  var(--text_color);
+      margin-bottom: 0.5rem;
     }
 
     #CoverImage {
@@ -91,6 +92,10 @@
       border: 0.05rem solid var(--contrast_color);
       border-radius: 0.5rem;
       background: radial-gradient(var(--interactive_color), var(--interactive_color_hover));
+    }
+
+    #song {
+      font-size: 1.2rem;
     }
 
     #PlayButton {
@@ -137,10 +142,10 @@
 <body>
   <main class="app">
     <h1 class="headline">⚡ 80s Metal FM ⚡</h1>
-    <img id="CoverImage" src="./img/logo_bigrradio.png" alt="Cover Image">
+    <img id="CoverImage" src="./img/logo_bigrradio.png"  alt="Cover Image">
       <div class="songInfoContainer">
-        <p id="song">Test</p>
-        <p id="artist">Tester</p>
+        <p id="song">Connecting...</p>
+        <p id="artist">Please wait...</p>
       </div>
     <button id="PlayButton">Pause</button>
     <input id="VolumeSlider" type="range" min="0" max="100" value="100">
@@ -148,22 +153,53 @@
 
   <script>
     let isPlaying = true;
+    const PlayButton = document.getElementById("PlayButton");
+    const VolumeSlider = document.getElementById("VolumeSlider");
+    const CoverImage = document.getElementById("CoverImage");
 
-    function togglePlay() {
-      isPlaying = !isPlaying;
-      document.getElementById('playBtn').innerText = isPlaying ? "Pause" : "Play";
-      window.external.sendMessage('toggle');
+    if (window.localStorage.getItem("volume")) {
+      let volume = window.localStorage.getItem("volume");
+      VolumeSlider.value = volume;
+      //setVolume(volume);
     }
 
-    function setVolume(val) {
-      window.external.sendMessage('vol:' + val);
+    PlayButton.addEventListener("click", () => {
+      isPlaying = !isPlaying;
+      PlayButton.innerText = isPlaying ? "Pause" : "Play";
+      post('toggle');
+    })
+
+    VolumeSlider.addEventListener("input", () => {
+      let volume = VolumeSlider.value;
+      setVolume(volume);
+      window.localStorage.setItem("volume", volume)
+    })
+
+    function setVolume(volume) {
+      post('vol:' + volume);
+    }
+
+    function post(data) {
+      window.external.sendMessage(data);
     }
 
     window.external.receiveMessage(rawJson => {
       const data = JSON.parse(rawJson);
+      setArtURL();
       document.getElementById('song').innerText = data.song;
       document.getElementById('artist').innerText = "by " + data.artist;
     });
+
+    setArtURL()
+    async function setArtURL(){
+      CoverImage.src = await getArtURL();
+    }
+
+    async function getArtURL(){
+      const response = await fetch(`https://api.live365.com/station/a55004?=_${Date.now()}`)
+      const data = await response.json();
+      return data["current-track"].art;
+    }
   </script>
 </body>
 </html>
