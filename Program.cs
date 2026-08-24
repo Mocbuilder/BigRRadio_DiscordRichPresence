@@ -1,5 +1,6 @@
 ﻿using DiscordRPC;
 using LibVLCSharp.Shared;
+using Newtonsoft.Json;
 using Photino.NET;
 using System;
 using System.Text.Json;
@@ -15,6 +16,8 @@ namespace BigRRadio_DiscordRichPresence
             private static Media? _media;
             private static DiscordRpcClient? _discordClient;
             private static PhotinoWindow? _window;
+
+            public static string CurrentStreamUrl { get; private set; } = InitialStreamUrl;
 
             private const string InitialStreamUrl = "http://bigrradio.cdnstream1.com/5186_128";
             private const string DiscordAppId = "1537901110067470397";
@@ -79,11 +82,17 @@ namespace BigRRadio_DiscordRichPresence
                 _discordClient.Dispose();
             }
 
-            private static void SetNewStream(string url)
+            private static StreamInfo? SetNewStream(string url)
             {
-                if (_libVLC == null || _mediaPlayer == null) return;
+                CurrentStreamUrl = url;
+                StreamInfo streamInfo = GetStreamInfo(url);
+                if (streamInfo == null || streamInfo.CurrentTrack == null)
+                {
+                    Console.WriteLine("Failed to retrieve stream info or current track.");
+                    return null;
+                }
 
-                _mediaPlayer.Stop();
+                _mediaPlayer?.Stop();
 
                 if (_media != null)
                 {
@@ -91,39 +100,64 @@ namespace BigRRadio_DiscordRichPresence
                     _media.Dispose();
                 }
 
-                _media = new Media(_libVLC, new Uri(url), ":no-video");
+                _media = new Media(_libVLC, new Uri(streamInfo.StreamHlsUrl), ":no-video");
                 _media.MetaChanged += OnMetaChanged;
 
-                _mediaPlayer.Play(_media);
+                _mediaPlayer?.Play(_media);
+                return streamInfo;
             }
 
             private static void OnMetaChanged(object? sender, MediaMetaChangedEventArgs e)
             {
-                if (e.MetadataType == MetadataType.NowPlaying && _media != null && _window != null && _discordClient != null)
+                if (_media != null && _window != null && _discordClient != null)
                 {
-                    string rawTitle = _media.Meta(MetadataType.NowPlaying);
-                    if (!string.IsNullOrWhiteSpace(rawTitle))
+                    StreamInfo? streamInfo = SetNewStream(CurrentStreamUrl);
+                    if (streamInfo == null) return;
+
+                    var jsonPayload = System.Text.Json.JsonSerializer.Serialize(streamInfo);
+                    _window.SendWebMessage(jsonPayload);
+
+                    _discordClient.SetPresence(new RichPresence()
                     {
-                        var parts = rawTitle.Split(" - ", 2);
-                        string artist = parts.Length > 0 ? parts[0].Trim() : "Big R Radio";
-                        string song = parts.Length > 1 ? parts[1].Trim() : rawTitle.Trim();
-
-                        var jsonPayload = JsonSerializer.Serialize(new { artist, song });
-                        _window.SendWebMessage(jsonPayload);
-
-                        _discordClient.SetPresence(new RichPresence()
+                        Details = streamInfo.CurrentTrack?.Title ?? "Unknown",
+                        State = $"by {streamInfo.CurrentTrack?.Artist ?? "Unknown"}",
+                        Type = ActivityType.Listening,
+                        Assets = new Assets()
                         {
-                            Details = song,
-                            State = $"by {artist}",
-                            Type = ActivityType.Listening,
-                            Assets = new Assets()
-                            {
-                                LargeImageKey = "radio_logo",
-                                LargeImageText = "Big R Radio"
-                            },
-                            Timestamps = Timestamps.Now
-                        });
+                            LargeImageKey = "radio_logo",
+                            LargeImageText = "Big R Radio"
+                        },
+                        Timestamps = Timestamps.Now
+                    });
+                }
+            }
+
+            public static StreamInfo GetStreamInfo(string url)
+            {
+                using HttpClient client = new HttpClient();
+                var response = client.GetAsync(url).Result;
+                StreamInfo? streamInfo;
+                var jsonString = string.Empty;
+                if (response.IsSuccessStatusCode)
+                {
+                    jsonString = response.Content.ReadAsStringAsync().Result;
+                    streamInfo = JsonConvert.DeserializeObject<StreamInfo>(jsonString);
+                    if (streamInfo != null && streamInfo.CurrentTrack != null)
+                    {
+                        return streamInfo;
                     }
+                    else
+                    {
+                        Console.WriteLine($"StreamInfo or CurrentTrack is null.\n{jsonString}");
+                        Console.ReadKey();
+                        return null;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"No Success Status Code.\n{response.StatusCode}");
+                    Console.ReadKey();
+                    return null;
                 }
             }
         }
