@@ -30,8 +30,10 @@ namespace BigRRadio_DiscordRichPresence
 
                 _window = new PhotinoWindow()
                     .SetTitle("Big R Radio")
-                    .SetSize(360, 180)
-                    .SetResizable(true)
+                    .SetUseOsDefaultSize(false)
+                    .SetSize(new System.Drawing.Size(600, 905))
+                    .Center()
+                    .SetResizable(false)
                     .Load("wwwroot/index.html");
 
                 SetNewStream(InitialStreamUrl);
