@@ -42,9 +42,11 @@ namespace BigRRadio_DiscordRichPresence
                     .SetTitle("Big R Radio")
                     .SetIconFile(tempIconPath)
                     .SetUseOsDefaultSize(false)
-                    .SetSize(new System.Drawing.Size(570, 955))
+                    .SetSize(new System.Drawing.Size(550, 960))
                     .Center()
                     .SetResizable(true)
+                    .SetContextMenuEnabled(false)
+                    .SetDevToolsEnabled(false)
                     .Load("wwwroot/index.html");
 
                 _window.RegisterWebMessageReceivedHandler((sender, message) =>
