@@ -44,7 +44,7 @@ namespace BigRRadio_DiscordRichPresence
                     .SetUseOsDefaultSize(false)
                     .SetSize(new System.Drawing.Size(550, 960))
                     .Center()
-                    .SetResizable(true)
+                    .SetResizable(false)
                     .SetContextMenuEnabled(false)
                     .SetDevToolsEnabled(false)
                     .Load("wwwroot/index.html");
