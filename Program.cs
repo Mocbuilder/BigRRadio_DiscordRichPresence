@@ -3,7 +3,8 @@ using LibVLCSharp.Shared;
 using Newtonsoft.Json;
 using Photino.NET;
 using System;
-using System.Text.Json;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace BigRRadio_DiscordRichPresence
 {
@@ -16,6 +17,7 @@ namespace BigRRadio_DiscordRichPresence
             private static Media? _media;
             private static DiscordRpcClient? _discordClient;
             private static PhotinoWindow? _window;
+            private static readonly HttpClient _httpClient = new HttpClient();
 
             public static string CurrentStreamUrl { get; private set; } = InitialStreamUrl;
 
@@ -39,8 +41,6 @@ namespace BigRRadio_DiscordRichPresence
                     .SetResizable(false)
                     .Load("wwwroot/index.html");
 
-                SetNewStream(InitialStreamUrl);
-
                 _window.RegisterWebMessageReceivedHandler((sender, message) =>
                 {
                     if (_mediaPlayer == null || _discordClient == null) return;
@@ -48,13 +48,9 @@ namespace BigRRadio_DiscordRichPresence
                     if (message == "toggle")
                     {
                         if (_mediaPlayer.IsPlaying)
-                        {
                             _mediaPlayer.Pause();
-                        }
                         else
-                        {
                             _mediaPlayer.Play();
-                        }
                     }
                     else if (message.StartsWith("vol:"))
                     {
@@ -71,26 +67,24 @@ namespace BigRRadio_DiscordRichPresence
                     }
                 });
 
-                _mediaPlayer.Play(_media);
+                // Load initial stream asynchronously without blocking window creation
+                SetNewStream(InitialStreamUrl);
 
+                // Blocks thread until window closes (UI loop)
                 _window.WaitForClose();
 
+                // Cleanup
                 _mediaPlayer.Stop();
                 _mediaPlayer.Dispose();
                 _media?.Dispose();
                 _libVLC.Dispose();
                 _discordClient.Dispose();
+                _httpClient.Dispose();
             }
 
-            private static StreamInfo? SetNewStream(string url)
+            private static void SetNewStream(string url)
             {
                 CurrentStreamUrl = url;
-                StreamInfo streamInfo = GetStreamInfo(url);
-                if (streamInfo == null || streamInfo.CurrentTrack == null)
-                {
-                    Console.WriteLine("Failed to retrieve stream info or current track.");
-                    return null;
-                }
 
                 _mediaPlayer?.Stop();
 
@@ -100,23 +94,33 @@ namespace BigRRadio_DiscordRichPresence
                     _media.Dispose();
                 }
 
-                _media = new Media(_libVLC, new Uri(streamInfo.StreamHlsUrl), ":no-video");
+                // Pass the stream URL directly to LibVLC
+                _media = new Media(_libVLC, new Uri(url), ":no-video");
                 _media.MetaChanged += OnMetaChanged;
 
                 _mediaPlayer?.Play(_media);
-                return streamInfo;
             }
 
-            private static void OnMetaChanged(object? sender, MediaMetaChangedEventArgs e)
+            private static async void OnMetaChanged(object? sender, MediaMetaChangedEventArgs e)
             {
-                if (_media != null && _window != null && _discordClient != null)
+                // Process metadata update asynchronously without calling SetNewStream again
+                StreamInfo? streamInfo = await GetStreamInfoAsync(CurrentStreamUrl);
+                if (streamInfo != null)
                 {
-                    StreamInfo? streamInfo = SetNewStream(CurrentStreamUrl);
-                    if (streamInfo == null) return;
+                    UpdatePresenceAndUI(streamInfo);
+                }
+            }
 
+            private static void UpdatePresenceAndUI(StreamInfo streamInfo)
+            {
+                if (_window != null)
+                {
                     var jsonPayload = System.Text.Json.JsonSerializer.Serialize(streamInfo);
                     _window.SendWebMessage(jsonPayload);
+                }
 
+                if (_discordClient != null)
+                {
                     _discordClient.SetPresence(new RichPresence()
                     {
                         Details = streamInfo.CurrentTrack?.Title ?? "Unknown",
@@ -132,33 +136,23 @@ namespace BigRRadio_DiscordRichPresence
                 }
             }
 
-            public static StreamInfo GetStreamInfo(string url)
+            public static async Task<StreamInfo?> GetStreamInfoAsync(string url)
             {
-                using HttpClient client = new HttpClient();
-                var response = client.GetAsync(url).Result;
-                StreamInfo? streamInfo;
-                var jsonString = string.Empty;
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    jsonString = response.Content.ReadAsStringAsync().Result;
-                    streamInfo = JsonConvert.DeserializeObject<StreamInfo>(jsonString);
-                    if (streamInfo != null && streamInfo.CurrentTrack != null)
+                    HttpResponseMessage response = await _httpClient.GetAsync(url);
+                    if (response.IsSuccessStatusCode)
                     {
-                        return streamInfo;
-                    }
-                    else
-                    {
-                        Console.WriteLine($"StreamInfo or CurrentTrack is null.\n{jsonString}");
-                        Console.ReadKey();
-                        return null;
+                        string jsonString = await response.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<StreamInfo>(jsonString);
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Console.WriteLine($"No Success Status Code.\n{response.StatusCode}");
-                    Console.ReadKey();
-                    return null;
+                    Console.WriteLine($"Network error: {ex.Message}");
                 }
+
+                return null;
             }
         }
     }
