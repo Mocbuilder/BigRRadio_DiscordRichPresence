@@ -42,7 +42,7 @@ namespace BigRRadio_DiscordRichPresence
                     .SetTitle("Big R Radio")
                     .SetIconFile(tempIconPath)
                     .SetUseOsDefaultSize(false)
-                    .SetSize(new System.Drawing.Size(570, 905))
+                    .SetSize(new System.Drawing.Size(570, 955))
                     .Center()
                     .SetResizable(true)
                     .Load("wwwroot/index.html");
@@ -185,7 +185,7 @@ namespace BigRRadio_DiscordRichPresence
                     if (response.IsSuccessStatusCode)
                     {
                         string jsonString = await response.Content.ReadAsStringAsync();
-                        return JsonConvert.DeserializeObject<StreamInfo>(jsonString);
+                        return System.Text.Json.JsonSerializer.Deserialize<StreamInfo>(jsonString);
                     }
                 }
                 catch (Exception ex)

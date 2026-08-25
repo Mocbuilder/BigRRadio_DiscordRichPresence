@@ -101,7 +101,7 @@
     #PlayButton {
       display: grid;
       height: 2em;
-      width: 100%;
+      width: fit-content;
       margin-bottom: 0.5rem;
       align-content: center; 
       border: 0.05rem solid var(--interactive_color_hover);
@@ -137,17 +137,34 @@
       background: var(--text_color);
       border: 0.05rem solid var(--contrast_color);
     }
+
+      .icon-btn {
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 8px;
+          color: #ffffff;
+      }          
   </style>
 </head>
 <body>
   <main class="app">
-    <h1 class="headline">80s Metal FM </h1>
+    <!--<h1 class="headline">80s Metal FM </h1> -->
+      <img src="./img/80s_metal_fm_text.png" alt="80s Metal FM" />
     <img id="Art" src="./img/logo_bigrradio.png"  alt="Cover Image">
       <div class="songInfoContainer">
         <p id="Title">Connecting...</p>
         <p id="Artist">Please wait...</p>
       </div>
-    <button id="PlayButton">Pause</button>
+      <button id="PlayButton" class="icon-btn" title="Pause">
+          <svg id="PlayIcon" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+              <!-- Default: Pause Icon -->
+              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+          </svg>
+      </button>
     <input id="VolumeSlider" type="range" min="0" max="100" value="100">
   </main>
 
@@ -155,6 +172,10 @@
     let isPlaying = true;
     const PlayButton = document.getElementById("PlayButton");
     const VolumeSlider = document.getElementById("VolumeSlider");
+
+    const playIcon = document.getElementById('PlayIcon');
+    const SVG_PAUSE = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+    const SVG_PLAY = '<path d="M8 5v14l11-7z"/>';
 
     if (window.localStorage.getItem("volume")) {
       let volume = window.localStorage.getItem("volume");
@@ -164,7 +185,8 @@
 
     PlayButton.addEventListener("click", () => {
       isPlaying = !isPlaying;
-      PlayButton.innerText = isPlaying ? "Pause" : "Play";
+      //PlayButton.innerText = isPlaying ? "Pause" : "Play";
+      playIcon.innerHTML = isPlaying ? SVG_PAUSE : SVG_PLAY;
       post('toggle');
     })
 
