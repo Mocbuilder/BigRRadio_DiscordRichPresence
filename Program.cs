@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using Photino.NET;
 using System;
 using System.Net.Http;
+using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BigRRadio_DiscordRichPresence
@@ -18,10 +20,11 @@ namespace BigRRadio_DiscordRichPresence
             private static DiscordRpcClient? _discordClient;
             private static PhotinoWindow? _window;
             private static readonly HttpClient _httpClient = new HttpClient();
+            private static Timer? _metadataTimer;
 
-            public static string CurrentStreamUrl { get; private set; } = InitialStreamUrl;
+            public static string CurrentApiUrl { get; private set; } = InitialApiUrl;
 
-            private const string InitialStreamUrl = "http://bigrradio.cdnstream1.com/5186_128";
+            private const string InitialApiUrl = "https://api.live365.com/station/a55004";
             private const string DiscordAppId = "1537901110067470397";
 
             [STAThread]
@@ -33,12 +36,15 @@ namespace BigRRadio_DiscordRichPresence
                 _discordClient = new DiscordRpcClient(DiscordAppId);
                 _discordClient.Initialize();
 
+                string tempIconPath = ExtractResourceToTempFile("BigRRadio_DiscordRichPresence.VERT_logo_bigrradio.ico");
+
                 _window = new PhotinoWindow()
                     .SetTitle("Big R Radio")
+                    .SetIconFile(tempIconPath)
                     .SetUseOsDefaultSize(false)
-                    .SetSize(new System.Drawing.Size(600, 905))
+                    .SetSize(new System.Drawing.Size(570, 905))
                     .Center()
-                    .SetResizable(false)
+                    .SetResizable(true)
                     .Load("wwwroot/index.html");
 
                 _window.RegisterWebMessageReceivedHandler((sender, message) =>
@@ -61,19 +67,28 @@ namespace BigRRadio_DiscordRichPresence
                     }
                     else if (message.StartsWith("channel:"))
                     {
-                        string streamId = message.Substring(8);
-                        string newUrl = $"http://bigrradio.cdnstream1.com/{streamId}";
-                        SetNewStream(newUrl);
+                        string stationId = message.Substring(8);
+
+                        // Supports both full URLs and raw station IDs (e.g. "a55004")
+                        string newApiUrl = stationId.StartsWith("http")
+                            ? stationId
+                            : $"https://api.live365.com/station/{stationId}";
+
+                        _ = SetNewStreamAsync(newApiUrl);
                     }
                 });
 
-                // Load initial stream asynchronously without blocking window creation
-                SetNewStream(InitialStreamUrl);
+                Task.Run(async () =>
+                {
+                    await Task.Delay(1000);
+                    await SetNewStreamAsync(InitialApiUrl);
+                });
 
-                // Blocks thread until window closes (UI loop)
+                _metadataTimer = new Timer(async _ => await RefreshMetadataAsync(), null, 15000, 15000);
+
                 _window.WaitForClose();
 
-                // Cleanup
+                _metadataTimer.Dispose();
                 _mediaPlayer.Stop();
                 _mediaPlayer.Dispose();
                 _media?.Dispose();
@@ -82,32 +97,58 @@ namespace BigRRadio_DiscordRichPresence
                 _httpClient.Dispose();
             }
 
-            private static void SetNewStream(string url)
+            private static string ExtractResourceToTempFile(string resourceName)
             {
-                CurrentStreamUrl = url;
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                using Stream? stream = assembly.GetManifestResourceStream(resourceName);
 
-                _mediaPlayer?.Stop();
-
-                if (_media != null)
+                if (stream == null)
                 {
-                    _media.MetaChanged -= OnMetaChanged;
-                    _media.Dispose();
+                    throw new FileNotFoundException($"Embedded resource '{resourceName}' not found. Check namespace and filename.");
                 }
 
-                // Pass the stream URL directly to LibVLC
-                _media = new Media(_libVLC, new Uri(url), ":no-video");
-                _media.MetaChanged += OnMetaChanged;
+                string extension = Path.GetExtension(resourceName);
+                string tempFilePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}{extension}");
 
-                _mediaPlayer?.Play(_media);
+                using FileStream fileStream = File.Create(tempFilePath);
+                stream.CopyTo(fileStream);
+
+                return tempFilePath;
             }
 
-            private static async void OnMetaChanged(object? sender, MediaMetaChangedEventArgs e)
+            private static async Task SetNewStreamAsync(string apiUrl)
             {
-                // Process metadata update asynchronously without calling SetNewStream again
-                StreamInfo? streamInfo = await GetStreamInfoAsync(CurrentStreamUrl);
-                if (streamInfo != null)
+                CurrentApiUrl = apiUrl;
+
+                StreamInfo? streamInfo = await GetStreamInfoAsync(CurrentApiUrl);
+                if (streamInfo == null || string.IsNullOrEmpty(streamInfo.StreamHlsUrl))
                 {
-                    UpdatePresenceAndUI(streamInfo);
+                    Console.WriteLine("Failed to parse station info or missing audio stream URL.");
+                    return;
+                }
+
+                _mediaPlayer?.Stop();
+                _media?.Dispose();
+
+                _media = new Media(_libVLC, new Uri(streamInfo.StreamHlsUrl), ":no-video");
+                _mediaPlayer?.Play(_media);
+
+                UpdatePresenceAndUI(streamInfo);
+            }
+
+            private static async Task RefreshMetadataAsync()
+            {
+                try
+                {
+                    StreamInfo? streamInfo = await GetStreamInfoAsync(CurrentApiUrl);
+                    if (streamInfo != null)
+                    {
+                        UpdatePresenceAndUI(streamInfo);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Metadata refresh failed: {ex.Message}");
                 }
             }
 
