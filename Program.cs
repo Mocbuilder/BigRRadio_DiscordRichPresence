@@ -30,7 +30,23 @@ namespace BigRRadio_DiscordRichPresence
             [STAThread]
             static void Main(string[] args)
             {
-                Core.Initialize();
+                if (OperatingSystem.IsLinux())
+                {
+                    string libVlcPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "runtimes", "linux-x64", "native");
+                    if (Directory.Exists(libVlcPath))
+                    {
+                        Core.Initialize(libVlcPath);
+                    }
+                    else
+                    {
+                        Core.Initialize();
+                    }
+                }
+                else
+                {
+                    Core.Initialize();
+                }
+
                 _libVLC = new LibVLC();
                 _mediaPlayer = new MediaPlayer(_libVLC);
                 _discordClient = new DiscordRpcClient(DiscordAppId);

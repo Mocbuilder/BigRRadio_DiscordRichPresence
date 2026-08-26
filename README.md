@@ -1,42 +1,76 @@
 # Big R Radio - Discord Rich Presence
 
-A lightweight desktop application that integrates your [Big R Radio](https://www.bigrradio.com/) listening activity directly into your Discord status via Discord Rich Presence.
+A lightweight desktop application that shows your [Big R Radio](https://www.bigrradio.com/) listening activity in Discord using Rich Presence.
 
-> [!IMPORTANT] 
-> **Work in Progress:** This project is currently under active development and may contain bugs.  
-> Currently, the only supported station is **80s Metal FM** *(because Metal rules!)*. Support for additional Big R Radio channels will be added in future updates.
 
----
+
+> [!IMPORTANT]
+> **Work in Progress:** This project is still under development and may contain bugs.
+>
+> Currently, only **80s Metal FM** is supported. Support for more Big R Radio stations will be added in future updates.
 
 ## Getting Started
 
 ### Prerequisites
 
-* OS: Windows 10/11 (WebView2 is required) or Linux. MacOS is untested and unsupported, but potentially usable.
-* Discord Desktop Client (only for Rich Presence, Player works as standalone)
+#### Windows
+* **Windows 10 / 11** (64-bit)
+* **WebView2 Runtime** (pre-installed on modern Windows versions)
 
-### Installation
+#### Linux
+* **GTK3** and **WebKit2GTK** (4.0 or 4.1) system libraries:
+  * **Fedora / RHEL:** `sudo dnf install gtk3 webkit2gtk4.1`
+  * **Ubuntu / Debian:** `sudo apt install libgtk-3-0 libwebkit2gtk-4.0-37` (or `libwebkit2gtk-4.1-0`)
 
-1. Download the latest release from the [Releases](https://github.com/Mocbuilder/BigRRadio_DiscordRichPresence) page.
-2. Extract the `.zip` archive to a folder of your choice.
-3. Run `BigRRadio.exe`.
+#### macOS
+* Unsupported and untested, though cross-platform building via Photino is theoretically possible.
+
+#### General
+* **Discord Desktop App** (required only for Rich Presence functionality; the audio player functions independently as a standalone player).
 
 ---
 
+## Installation
+
+### Windows
+1. Download the latest `win-x64` archive from the [Releases](https://github.com/Mocbuilder/BigRRadio_DiscordRichPresence/releases) page.
+2. Extract the `.zip` archive to your desired location.
+3. Ensure the `wwwroot` folder remains in the same directory as the executable.
+4. Run `BigRRadio_DiscordRichPresence.exe`.
+
+### Linux
+1. Download the latest `linux-x64` archive from the [Releases](https://github.com/Mocbuilder/BigRRadio_DiscordRichPresence/releases) page.
+2. Extract the `.tar.gz` / `.zip` archive.
+3. Make the binary executable if needed:
+   ```bash
+   chmod +x BigRRadio_DiscordRichPresence
+	```
+4. Run `./BigRRadio_DiscordRichPresence`.
+
+## Building from Source
+
+Requires the .NET 9.0 SDK.
+
+### Build for Windows (Single File):
+```Bash
+
+dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true
+```
+### Build for Linux (Folder Bundle):
+```Bash
+
+dotnet publish -c Release -r linux-x64 --self-contained true /p:PublishSingleFile=false
+```
 ## License
 
-Distributed under the GNU General Public License v3.0. See `LICENSE` for more details.
-
----
+This project is distributed under the **GNU General Public License v3.0**. See [`LICENSE`](LICENSE.txt) for more information.
 
 ## Credits
 
-* **Mocbuilder** – Idea & Back-End Development
-* **Rimolo13** – Front-End Development
-
----
+- **Mocbuilder** - Idea & Backend Development
+- **Rimolo13** - Frontend Development
 
 ## Copyright & Legal Disclaimer
 
-* All Big R Radio logos, names, and related trademarks are the property of **Big R Radio**. This project is open-source and not affiliated with, endorsed by, or associated with Big R Radio in any way.
-* The "80s Metal FM" logo asset was created using [Textstudio](https://www.textstudio.com/).
+- All Big R Radio logos, names, and related trademarks are the property of **Big R Radio**. This project is open source and is not affiliated with, endorsed by, or associated with Big R Radio.
+- The **80s Metal FM** logo asset was created using [Textstudio](https://www.textstudio.com/).
