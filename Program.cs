@@ -97,6 +97,13 @@ namespace BigRRadio_DiscordRichPresence
                 _libVLC.Dispose();
                 _discordClient.Dispose();
                 _httpClient.Dispose();
+
+                string appTempDir = Path.Combine(Path.GetTempPath(), "BigRRadio_RPC");
+                if (Directory.Exists(appTempDir))
+                {
+                    try { Directory.Delete(appTempDir, true); }
+                    catch { /* Ignore lock issues */ }
+                }
             }
 
             private static string ExtractResourceToTempFile(string resourceName)
@@ -106,11 +113,14 @@ namespace BigRRadio_DiscordRichPresence
 
                 if (stream == null)
                 {
-                    throw new FileNotFoundException($"Embedded resource '{resourceName}' not found. Check namespace and filename.");
+                    throw new FileNotFoundException($"Embedded resource '{resourceName}' not found.");
                 }
 
+                string appTempDir = Path.Combine(Path.GetTempPath(), "BigRRadio_RPC");
+                Directory.CreateDirectory(appTempDir);
+
                 string extension = Path.GetExtension(resourceName);
-                string tempFilePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}{extension}");
+                string tempFilePath = Path.Combine(appTempDir, $"app_icon{extension}");
 
                 using FileStream fileStream = File.Create(tempFilePath);
                 stream.CopyTo(fileStream);

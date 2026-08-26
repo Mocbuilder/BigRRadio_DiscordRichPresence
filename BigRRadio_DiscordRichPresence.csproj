@@ -6,6 +6,14 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<ApplicationIcon>VERT_logo_bigrradio.ico</ApplicationIcon>
+		
+		<PublishSingleFile>true</PublishSingleFile>
+		<SelfContained>true</SelfContained>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+
+		<!-- Forces native DLLs to extract to a temporary folder at launch -->
+		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+		<PublishPyramid>false</PublishPyramid>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -23,7 +31,6 @@
 		<PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.23.1" />
 	</ItemGroup>
 
-	<!-- IMPORTANT: Copies HTML/CSS files to bin folder -->
 	<ItemGroup>
 		<None Update="wwwroot\**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
