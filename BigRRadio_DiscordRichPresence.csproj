@@ -8,6 +8,7 @@
 		<ApplicationIcon>VERT_logo_bigrradio.ico</ApplicationIcon>
 		<SelfContained>true</SelfContained>
 		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -27,11 +28,12 @@
 	<ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64' Or $(RuntimeIdentifier.StartsWith('win'))">
 		<PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.23.1" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
-		<None Update="wwwroot/**">
+		<Content Include="wwwroot\**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
 	</ItemGroup>
 
 </Project>

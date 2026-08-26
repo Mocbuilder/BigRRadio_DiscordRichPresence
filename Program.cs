@@ -41,6 +41,7 @@ namespace BigRRadio_DiscordRichPresence
                 _discordClient.Initialize();
 
                 string tempIconPath = ExtractResourceToTempFile("BigRRadio_DiscordRichPresence.VERT_logo_bigrradio.ico");
+                string htmlPath = Path.Combine(AppContext.BaseDirectory, "wwwroot", "index.html");
 
                 _window = new PhotinoWindow()
                     .SetTitle("Big R Radio")
@@ -51,7 +52,7 @@ namespace BigRRadio_DiscordRichPresence
                     .SetResizable(false)
                     .SetContextMenuEnabled(false)
                     .SetDevToolsEnabled(false)
-                    .Load("wwwroot/index.html");
+                    .Load(htmlPath);
 
                 _window.RegisterWebMessageReceivedHandler((sender, message) =>
                 {
