@@ -1,14 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<OutputType>Exe</OutputType>
+		<OutputType>WinExe</OutputType>
 		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<ApplicationIcon>VERT_logo_bigrradio.ico</ApplicationIcon>
 		<SelfContained>true</SelfContained>
 		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-		<PublishPyramid>false</PublishPyramid>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -34,7 +33,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="wwwroot\**">
+		<None Update="wwwroot/**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
