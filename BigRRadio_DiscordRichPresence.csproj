@@ -27,11 +27,7 @@
 	<ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64' Or $(RuntimeIdentifier.StartsWith('win'))">
 		<PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.23.1" />
 	</ItemGroup>
-
-	<ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-x64' Or $(RuntimeIdentifier.StartsWith('linux'))">
-		<PackageReference Include="VideoLAN.LibVLC.Linux" Version="3.0.21" />
-	</ItemGroup>
-
+	
 	<ItemGroup>
 		<None Update="wwwroot/**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
