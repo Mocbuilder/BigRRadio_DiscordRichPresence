@@ -33,7 +33,10 @@ namespace BigRRadio_DiscordRichPresence
                 Core.Initialize();
 
                 _libVLC = new LibVLC();
-                _mediaPlayer = new MediaPlayer(_libVLC);
+                _mediaPlayer = new MediaPlayer(_libVLC)
+                {
+                    Volume = 100
+                };
                 _discordClient = new DiscordRpcClient(DiscordAppId);
                 _discordClient.Initialize();
 

@@ -11,7 +11,7 @@ A lightweight desktop application that shows your [Big R Radio](https://www.bigr
 
 ## Known Issues
 ### All Platforms
-* On first Launch of the application, the volume is turned off/muted. Simply click or move the volume slider to correctly initialise the volume.
+* On Launch of the application, the volume is turned off/muted. Simply click or move the volume slider to correctly initialise the volume.
 
 ---
 ## Getting Started
