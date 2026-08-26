@@ -18,9 +18,9 @@ A lightweight desktop application that shows your [Big R Radio](https://www.bigr
 * **WebView2 Runtime** (pre-installed on modern Windows versions)
 
 #### Linux
-* **GTK3** and **WebKit2GTK** (4.0 or 4.1) system libraries:
-  * **Fedora / RHEL:** `sudo dnf install gtk3 webkit2gtk4.1`
-  * **Ubuntu / Debian:** `sudo apt install libgtk-3-0 libwebkit2gtk-4.0-37` (or `libwebkit2gtk-4.1-0`)
+* **GTK3**, **WebKit2GTK** (4.0 or 4.1) and **VLC** system libraries:
+  * **Fedora / RHEL:** `sudo dnf install gtk3 webkit2gtk4.1 vlc`
+  * **Ubuntu / Debian:** `sudo apt install libgtk-3-0 libwebkit2gtk-4.0-37 vlc` (or `libwebkit2gtk-4.1-0`)
 
 #### macOS
 * Unsupported and untested, though cross-platform building via Photino is theoretically possible.
