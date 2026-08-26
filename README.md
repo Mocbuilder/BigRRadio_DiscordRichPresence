@@ -79,3 +79,5 @@ This project is distributed under the **GNU General Public License v3.0**. See [
 
 - All Big R Radio logos, names, and related trademarks are the property of **Big R Radio**. This project is open source and is not affiliated with, endorsed by, or associated with Big R Radio.
 - The **80s Metal FM** logo asset was created using [Textstudio](https://www.textstudio.com/).
+
+### AI Disclaimer: No AI was used in the development of this Application whatsoever.
