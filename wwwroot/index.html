@@ -182,6 +182,10 @@
       VolumeSlider.value = volume;
       setVolume(volume);
     }
+    else {
+      VolumeSlider.value = 75;
+      setVolume(75);
+    }
 
     PlayButton.addEventListener("click", () => {
       isPlaying = !isPlaying;
