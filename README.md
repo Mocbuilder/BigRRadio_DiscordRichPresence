@@ -9,6 +9,11 @@ A lightweight desktop application that shows your [Big R Radio](https://www.bigr
 >
 > Currently, only **80s Metal FM** is supported. Support for more Big R Radio stations will be added in future updates.
 
+## Known Issues
+### All Platforms
+* On first Launch of the application, the volume is turned off/muted. Simply click or move the volume slider to correctly initialise the volume.
+
+---
 ## Getting Started
 
 ### Prerequisites
