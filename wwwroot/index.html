@@ -129,20 +129,26 @@
       height: 1rem;
       cursor: pointer;
       background: transparent;
+      appearance: none;
     }
 
-    #VolumeSlider::-webkit-slider-runnable-track,
-    #VolumeSlider::-moz-range-track {
+    #VolumeSlider::-webkit-slider-runnable-track {
       background: linear-gradient(90deg, var(--interactive_color) 0%, var(--interactive_color_hover) 50%, var(--interactive_color) 100%);
       border: 0.05rem solid var(--contrast_color);
       border-radius: 0.5rem;
       height: 0.3rem;
+      -webkit-appearance: none;
     }
 
-    #VolumeSlider::-webkit-slider-thumb,
-    #VolumeSlider::-moz-range-thumb {
+    #VolumeSlider::-webkit-slider-thumb {
+      display: grid;
+      height: 1rem;
+      width: 1rem;
+      border-radius: 1rem;
       background: var(--text_color);
       border: 0.05rem solid var(--contrast_color);
+      transform: translateY(-40%);
+      -webkit-appearance: none;
     }         
   </style>
 </head>
