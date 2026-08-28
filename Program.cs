@@ -58,12 +58,15 @@ namespace BigRRadio_DiscordRichPresence
                 {
                     if (_mediaPlayer == null || _discordClient == null) return;
 
+                    ParseMessage(message);
+
+                    /*
                     if (message == "toggle")
                     {
                         if (_mediaPlayer.IsPlaying)
-                            _mediaPlayer.Pause();
+                            _mediaPlayer.Volume = 0;
                         else
-                            _mediaPlayer.Play();
+                            _mediaPlayer.Volume = 100;
                     }
                     else if (message.StartsWith("vol:"))
                     {
@@ -83,6 +86,7 @@ namespace BigRRadio_DiscordRichPresence
 
                         _ = SetNewStreamAsync(newApiUrl);
                     }
+                    */
                 });
 
                 Task.Run(async () =>
@@ -108,6 +112,49 @@ namespace BigRRadio_DiscordRichPresence
                 {
                     try { Directory.Delete(appTempDir, true); }
                     catch { /* Ignore lock issues */ }
+                }
+            }
+
+            private static void ParseMessage(string message)
+            {
+                switch (message)
+                {
+                    case "toggle":
+                        _mediaPlayer.Volume = _mediaPlayer.IsPlaying ? 0 : 100;
+                        break;
+
+                    case string s when s.StartsWith("vol:"):
+                        if (int.TryParse(s.Substring(4), out int volume))
+                        {
+                            _mediaPlayer.Volume = volume;
+                        }
+                        break;
+
+                    case string s when s.StartsWith("channel:"):
+                        string stationId = s.Substring(8);
+                        string newApiUrl = stationId.StartsWith("http")
+                            ? stationId
+                            : $"https://api.live365.com/station/{stationId}";
+
+                        _ = SetNewStreamAsync(newApiUrl);
+                        break;
+                }
+            }
+
+            private string GetJsonEmbeddedResource(string name)
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                string resourceName = "PeacockAutoUpdater.Resources.config.json";
+
+                using (Stream? stream = assembly.GetManifestResourceStream(name))
+                {
+                    if (stream == null)
+                        throw new FileNotFoundException($"Could not find embedded resource: {name}");
+
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        return reader.ReadToEnd();
+                    }
                 }
             }
 

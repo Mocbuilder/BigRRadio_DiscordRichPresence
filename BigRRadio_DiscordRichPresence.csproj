@@ -12,10 +12,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="stations.json" />
 	  <None Remove="VERT_logo_bigrradio.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Include="stations.json" />
 	  <EmbeddedResource Include="VERT_logo_bigrradio.ico" />
 	</ItemGroup>
 
