@@ -138,18 +138,21 @@ namespace BigRRadio_DiscordRichPresence
 
                         _ = SetNewStreamAsync(newApiUrl);
                         break;
+                    case "GetStations":
+                        _window.SendWebMessage(GetJsonEmbeddedResource("stations.json"));
+                        break;
                 }
             }
 
-            private string GetJsonEmbeddedResource(string name)
+            private static string GetJsonEmbeddedResource(string filename)
             {
                 var assembly = Assembly.GetExecutingAssembly();
-                string resourceName = "PeacockAutoUpdater.Resources.config.json";
+                string resourceName = "BigRRadio_DiscordRichPresence." + filename;
 
-                using (Stream? stream = assembly.GetManifestResourceStream(name))
+                using (Stream? stream = assembly.GetManifestResourceStream(resourceName))
                 {
                     if (stream == null)
-                        throw new FileNotFoundException($"Could not find embedded resource: {name}");
+                        throw new FileNotFoundException($"Could not find embedded resource: {resourceName}");
 
                     using (StreamReader reader = new StreamReader(stream))
                     {
