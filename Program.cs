@@ -47,7 +47,7 @@ namespace BigRRadio_DiscordRichPresence
                     .SetTitle("Big R Radio")
                     .SetIconFile(tempIconPath)
                     .SetUseOsDefaultSize(false)
-                    .SetSize(new System.Drawing.Size(550, 960))
+                    .SetSize(new System.Drawing.Size(550, 1000))
                     .Center()
                     .SetResizable(false)
                     .SetContextMenuEnabled(false)
@@ -146,7 +146,7 @@ namespace BigRRadio_DiscordRichPresence
 
             private static List<Station> GetStationIDs()
             {
-                string path = Path.Combine(Directory.GetCurrentDirectory(), @"/wwwroot/res/stations.json");
+                string path = Path.Combine(Directory.GetCurrentDirectory(), @"/wwwroot/res/data/stations.json");
                 if (!Path.Exists(path))
                 {
                     return new List<Station>();

@@ -3,159 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./res/css/index.css">
+  <script type="module" src="./res/js/index.js"></script>
   <title>Big R Radio</title>
-  <style>
-    :root {
-      --main: #5e0000;
-      --white: #fffffa;
-      --black: #030300;
-      --text_color: var(--white);
-      --background_first_color: color-mix(in srgb, var(--main) 5%, var(--white));
-      --background_second_color: color-mix(in srgb, var(--main) 35%, var(--white));
-      --background_third_color: color-mix(in srgb, var(--main) 65%, var(--white));
-      --interactive_color: color-mix(in srgb, var(--main) 85%, var(--white));
-      --interactive_color_hover: color-mix(in srgb, var(--main) 85%, var(--black));
-      --contrast_color: color-mix(in srgb, var(--main) 95%, var(--black));
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --background_first_color: color-mix(in srgb, var(--main) 5%, var(--black));
-        --background_second_color: color-mix(in srgb, var(--main) 35%, var(--black));
-        --background_third_color: color-mix(in srgb, var(--main) 65%, var(--black));
-        --interactive_color: color-mix(in srgb, var(--main) 85%, var(--black));
-        --interactive_color_hover: color-mix(in srgb, var(--main) 85%, var(--white));
-        --contrast_color: color-mix(in srgb, var(--main) 95%, var(--white));
-      }
-    }
-
-    * {
-      margin: 0px;
-      padding: 0px;
-      max-width: 100dvw;
-      list-style: none;
-      color: var(--text_color);
-      font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande","Lucida Sans Unicode", Geneva, Verdana, sans-serif, Times, serif;
-      font-size: clamp(16px, 0.25rem + 1vw, 1.5rem);
-      font-weight: bolder;
-      text-align: center;
-      outline: none;
-      overflow: hidden;
-      user-select: none;
-    }
-
-    html,
-    body {
-      height: 100dvh;
-      width: 100dvw;
-    }
-
-    body {
-      display: grid;
-      background: radial-gradient(var(--background_second_color), var(--background_first_color) 100%);
-      justify-items: center;
-      align-items: center;
-    }
-
-    .app {
-      display: grid;
-      width: calc(100% - 2.1rem);
-      height: calc(100% - 2.1rem);
-      justify-items: center;
-      padding: 1rem;
-      border: 0.05rem solid var(--contrast_color);
-      border-radius: 0.5rem;
-      background: radial-gradient(var(--background_second_color), var(--background_third_color));
-      box-shadow: 0rem 0rem 1rem 0.5rem var(--background_second_color);
-      z-index: 0;
-    }
-
-    .headline {
-      width: 100%;
-      margin-bottom: 0.5rem;
-    }
-
-    #Art {
-      display: grid;
-      width: 100%;
-      border-radius: 0.3rem;
-    }
-
-    .songInfoContainer {
-      display: grid;
-      width: 100%;
-      margin-top: 0.5rem;
-      margin-bottom: 0.5rem;
-      padding-top: 0.5rem;
-      padding-bottom: 0.5rem;
-      border: 0.05rem solid var(--contrast_color);
-      border-radius: 0.5rem;
-      background: radial-gradient(var(--interactive_color), var(--interactive_color_hover));
-    }
-
-    #song {
-      font-size: clamp(16px, 0.3rem + 1vw, 1.8rem);
-    }
-
-    #PlayButton {
-      display: grid;
-      height: 2em;
-      aspect-ratio: 1/1;
-      margin-bottom: 0.5rem;
-      align-content: center; 
-      border: 0.05rem solid var(--interactive_color_hover);
-      border-radius: 0.15rem;
-      background: var(--interactive_color);
-      transition: background 0.3s;
-      cursor: pointer;
-    }
-
-    #PlayButton:focus,
-    #PlayButton:hover {
-      border: 0.05rem solid var(--interactive_color);
-      background: var(--interactive_color_hover);
-    }
-
-    .iconBtn {
-      display: grid;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-    }
-
-    #VolumeSlider {
-      display: grid;
-      width: 100%;
-      height: 1rem;
-      cursor: pointer;
-      background: transparent;
-      appearance: none;
-    }
-
-    #VolumeSlider::-webkit-slider-runnable-track {
-      background: linear-gradient(90deg, var(--interactive_color) 0%, var(--interactive_color_hover) 50%, var(--interactive_color) 100%);
-      border: 0.05rem solid var(--contrast_color);
-      border-radius: 0.5rem;
-      height: 0.3rem;
-      -webkit-appearance: none;
-    }
-
-    #VolumeSlider::-webkit-slider-thumb {
-      display: grid;
-      height: 1rem;
-      width: 1rem;
-      border-radius: 1rem;
-      background: var(--text_color);
-      border: 0.05rem solid var(--contrast_color);
-      transform: translateY(-40%);
-      -webkit-appearance: none;
-    }         
-  </style>
 </head>
 <body>
   <main class="app">
-    <img class="headline" src="./img/80s_metal_fm_text.png" alt="80s Metal FM" />
-    <img id="Art" src="./img/blankart.jpg"  alt="Cover Image">
+    <select id="RadioList"></select>
+    <img id="Headline" src="./img/icon_fallback.png" alt="Headline" />
+    <img id="Art" src="./res/img/blankart.png"  alt="Cover Image">
       <div class="songInfoContainer">
         <p id="Title">Connecting...</p>
         <p id="Artist">Please wait...</p>
@@ -167,52 +23,5 @@
       </button>
     <input id="VolumeSlider" type="range" min="0" max="100" value="100">
   </main>
-
-  <script>
-    let isPlaying = true;
-    const PlayButton = document.getElementById("PlayButton");
-    const VolumeSlider = document.getElementById("VolumeSlider");
-
-    const playIcon = document.getElementById('PlayIcon');
-    const pauseIco = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-    const playIco = '<path d="M8 5v14l11-7z"/>';
-
-    if (window.localStorage.getItem("volume")) {
-      let volume = window.localStorage.getItem("volume");
-      VolumeSlider.value = volume;
-      setVolume(volume);
-    }
-    else {
-      VolumeSlider.value = 75;
-      setVolume(75);
-    }
-
-    PlayButton.addEventListener("click", () => {
-      isPlaying = !isPlaying;
-      playIcon.innerHTML = isPlaying ? pauseIco : playIco;
-      post('toggle');
-    })
-
-    VolumeSlider.addEventListener("input", () => {
-      let volume = VolumeSlider.value;
-      setVolume(volume);
-      window.localStorage.setItem("volume", volume)
-    })
-
-    function setVolume(volume) {
-      post('vol:' + volume);
-    }
-
-    function post(data) {
-      window.external.sendMessage(data);
-    }
-
-    window.external.receiveMessage(rawJson => {
-      const data = JSON.parse(rawJson)["current-track"];
-      document.getElementById("Art").src = data.art;
-      document.getElementById("Title").innerText = data.title;
-      document.getElementById("Artist").innerText = "by " + data.artist;
-    });
-  </script>
 </body>
 </html>

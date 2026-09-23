@@ -1,0 +1,116 @@
+//variable
+let isPlaying = true;
+const PlayButton = document.getElementById("PlayButton");
+const VolumeSlider = document.getElementById("VolumeSlider");
+
+const playIcon = document.getElementById('PlayIcon');
+const pauseIco = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+const playIco = '<path d="M8 5v14l11-7z"/>';
+
+//save|load
+if (window.localStorage.getItem("volume")) {
+    let volume = window.localStorage.getItem("volume");
+    VolumeSlider.value = volume;
+    setVolume(volume);
+}
+else {
+    VolumeSlider.value = 75;
+    setVolume(75);
+}
+
+//event
+PlayButton.addEventListener("click", () => {
+    isPlaying = !isPlaying;
+    playIcon.innerHTML = isPlaying ? pauseIco : playIco;
+    post('toggle');
+})
+
+VolumeSlider.addEventListener("input", () => {
+    let volume = VolumeSlider.value;
+    setVolume(volume);
+    window.localStorage.setItem("volume", volume)
+})
+
+//class
+class RadioListManager {
+    constructor(){
+        this.radioList = document.getElementById("RadioList");
+        this.radioList.value = "";
+        
+        this.buildOption();
+
+        this.radioList.addEventListener("input", ()=>{
+            this.goToRadio(this.radioList.value);
+        })
+    }
+
+    async getData() {
+        const data = (await fetch("./res/data/stations.json")).json();
+        return data;
+    }
+
+    async getSingleData(numberOfArrayItem){
+        const item = (await this.getData())[numberOfArrayItem];
+        return item;
+    }
+
+    createOption(id,name){
+        const newElement = document.createElement("option");
+        newElement.value = id;
+        newElement.textContent = name;
+        this.radioList.appendChild(newElement);
+    }
+
+    async buildOption(){
+        const dataLenght = (await this.getData()).length;
+        for(let i = 0; i < dataLenght; i++){
+            const singleData = await this.getSingleData(i);
+            this.createOption(singleData.id,singleData.name);
+            if (singleData.id == window.localStorage.getItem("id")){
+                this.restoreRadio(singleData.name);
+            }
+        }
+    }
+
+    restoreRadio(value){
+    if (window.localStorage.getItem("id")) {
+        let id = window.localStorage.getItem("id");
+        this.radioList.value = value;
+        this.goToRadio(id);
+    }
+    else {
+        this.radioList.value = "Big R Radio - 80s Metal FM";
+        this.goToRadio("a55004");
+    }
+    }
+
+    chanceHeadline(id){
+        const Headline = document.getElementById("Headline");
+        Headline.src = `./res/img/icon_${id}.png`;
+    }
+
+    goToRadio(id){
+        post('channel:' + id);
+        this.chanceHeadline(id);
+        window.localStorage.setItem("id", id);
+    }
+}
+
+const radioListManager = new RadioListManager;
+
+//function
+function setVolume(volume) {
+    post('vol:' + volume);
+}
+
+function post(data) {
+    window.external.sendMessage(data);
+}
+
+//get data
+window.external.receiveMessage(rawJson => {
+    const data = JSON.parse(rawJson)["current-track"];
+    document.getElementById("Art").src = data.art;
+    document.getElementById("Title").innerText = data.title;
+    document.getElementById("Artist").innerText = "by " + data.artist;
+});
