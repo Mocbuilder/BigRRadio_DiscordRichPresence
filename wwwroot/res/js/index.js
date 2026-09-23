@@ -35,23 +35,16 @@ VolumeSlider.addEventListener("input", () => {
 class RadioListManager {
     constructor(){
         this.radioList = document.getElementById("RadioList");
-        this.radioList.value = "";
-        
         this.buildOption();
-
+        this.restoreRadio();
         this.radioList.addEventListener("input", ()=>{
             this.goToRadio(this.radioList.value);
-        })
+        });
     }
 
     async getData() {
         const data = (await fetch("./res/data/stations.json")).json();
         return data;
-    }
-
-    async getSingleData(numberOfArrayItem){
-        const item = (await this.getData())[numberOfArrayItem];
-        return item;
     }
 
     createOption(id,name){
@@ -62,26 +55,23 @@ class RadioListManager {
     }
 
     async buildOption(){
-        const dataLenght = (await this.getData()).length;
-        for(let i = 0; i < dataLenght; i++){
-            const singleData = await this.getSingleData(i);
+        const Data = await this.getData();
+        const DataLenght = Data.length;
+        for(let i = 0; i < DataLenght; i++){
+            const singleData = Data[i];
             this.createOption(singleData.id,singleData.name);
-            if (singleData.id == window.localStorage.getItem("id")){
-                this.restoreRadio(singleData.name);
-            }
         }
+        this.radioList.value = "";
     }
 
-    restoreRadio(value){
-    if (window.localStorage.getItem("id")) {
-        let id = window.localStorage.getItem("id");
-        this.radioList.value = value;
-        this.goToRadio(id);
-    }
-    else {
-        this.radioList.value = "Big R Radio - 80s Metal FM";
-        this.goToRadio("a55004");
-    }
+    restoreRadio(){
+        if (window.localStorage.getItem("id")) {
+            let id = window.localStorage.getItem("id");
+            this.goToRadio(id);
+        }
+        else {
+            this.goToRadio("a55004");
+        }
     }
 
     chanceHeadline(id){
@@ -92,6 +82,7 @@ class RadioListManager {
     goToRadio(id){
         post('channel:' + id);
         this.chanceHeadline(id);
+        this.radioList.value = "";
         window.localStorage.setItem("id", id);
     }
 }

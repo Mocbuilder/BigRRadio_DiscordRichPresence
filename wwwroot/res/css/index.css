@@ -52,8 +52,8 @@ body {
 
 .app {
     display: grid;
-    width: calc(550px - 2.1rem);
-    height: calc(1000px - 2.1rem);
+    width: calc(100% - 2.1rem);
+    height: calc(100% - 2.1rem);
     justify-items: center;
     padding: 1rem;
     border: 0.05rem solid var(--contrast_color);
@@ -79,7 +79,7 @@ body {
 
 #Art {
     display: grid;
-    width: 100%;
+    width: 95%;
     border-radius: 0.3rem;
 }
 
