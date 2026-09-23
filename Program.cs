@@ -138,12 +138,10 @@ namespace BigRRadio_DiscordRichPresence
 
                         _ = SetNewStreamAsync(newApiUrl);
                         break;
-                    case "GetStations":
-                        _window.SendWebMessage(GetJsonEmbeddedResource("stations.json"));
-                        break;
                 }
             }
 
+            /*
             private static string GetJsonEmbeddedResource(string filename)
             {
                 var assembly = Assembly.GetExecutingAssembly();
@@ -160,7 +158,7 @@ namespace BigRRadio_DiscordRichPresence
                     }
                 }
             }
-
+            */
             private static string ExtractResourceToTempFile(string resourceName)
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
