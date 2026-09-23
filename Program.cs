@@ -146,13 +146,15 @@ namespace BigRRadio_DiscordRichPresence
 
             private static List<Station> GetStationIDs()
             {
-                string path = Path.Combine(Directory.GetCurrentDirectory(), @"/wwwroot/res/data/stations.json");
-                if (!Path.Exists(path))
+                string path = Path.Combine(AppContext.BaseDirectory, "wwwroot", "res", "data", "stations.json");
+
+                if (!File.Exists(path))
                 {
                     return new List<Station>();
                 }
 
-                List<Station>? stations = System.Text.Json.JsonSerializer.Deserialize<List<Station>>(File.ReadAllText(path));
+                string json = File.ReadAllText(path);
+                List<Station>? stations = System.Text.Json.JsonSerializer.Deserialize<List<Station>>(json);
                 return stations ?? new List<Station>();
             }
 
