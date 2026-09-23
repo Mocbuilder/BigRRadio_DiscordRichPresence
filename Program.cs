@@ -132,13 +132,28 @@ namespace BigRRadio_DiscordRichPresence
 
                     case string s when s.StartsWith("channel:"):
                         string stationId = s.Substring(8);
-                        string newApiUrl = stationId.StartsWith("http")
-                            ? stationId
-                            : $"https://api.live365.com/station/{stationId}";
+                        if (!GetStationIDs().Any(station => station.ID == stationId))
+                        {
+                            return;
+                        }
+
+                        string newApiUrl = $"https://api.live365.com/station/{stationId}";
 
                         _ = SetNewStreamAsync(newApiUrl);
                         break;
                 }
+            }
+
+            private static List<Station> GetStationIDs()
+            {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), @"/wwwroot/res/stations.json");
+                if (!Path.Exists(path))
+                {
+                    return new List<Station>();
+                }
+
+                List<Station>? stations = System.Text.Json.JsonSerializer.Deserialize<List<Station>>(File.ReadAllText(path));
+                return stations ?? new List<Station>();
             }
 
             /*

@@ -10,9 +10,9 @@ namespace BigRRadio_DiscordRichPresence
     public class Station
     {
         [JsonPropertyName("id")]
-        string ID { get; set; }
+        public string ID { get; set; }
 
         [JsonPropertyName("name")]
-        string Name { get; set; }
+        public string Name { get; set; }
     }
 }
