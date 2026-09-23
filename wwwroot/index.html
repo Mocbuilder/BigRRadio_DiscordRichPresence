@@ -10,17 +10,17 @@
 <body>
   <main class="app">
     <select id="RadioList"></select>
-    <img id="Headline" src="./img/icon_fallback.png" alt="Headline" />
+    <img id="Headline" src="./res/img/icon_error.png" alt="Headline" />
     <img id="Art" src="./res/img/blankart.png"  alt="Cover Image">
-      <div class="songInfoContainer">
-        <p id="Title">Connecting...</p>
-        <p id="Artist">Please wait...</p>
-      </div>
-      <button id="PlayButton" class="iconBtn">
-          <svg id="PlayIcon" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-          </svg>
-      </button>
+    <div class="songInfoContainer">
+      <p id="Title">Connecting...</p>
+      <p id="Artist">Please wait...</p>
+    </div>
+    <button id="PlayButton" class="iconBtn">
+      <svg id="PlayIcon" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+      </svg>
+    </button>
     <input id="VolumeSlider" type="range" min="0" max="100" value="100">
   </main>
 </body>

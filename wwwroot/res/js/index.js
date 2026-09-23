@@ -74,9 +74,16 @@ class RadioListManager {
         }
     }
 
-    chanceHeadline(id){
+    async chanceHeadline(id){
         const Headline = document.getElementById("Headline");
-        Headline.src = `./res/img/icon_${id}.png`;
+        try{
+            let img = `./res/img/icon_${id}.png`
+            await fetch(img);
+            Headline.src = img;
+        }
+        catch{
+            Headline.src = `./res/img/icon_error.png`
+        }
     }
 
     goToRadio(id){
