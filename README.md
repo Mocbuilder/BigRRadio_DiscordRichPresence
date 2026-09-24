@@ -77,9 +77,9 @@ This project is distributed under the **GNU General Public License v3.0**. See [
 
 ## Copyright & Legal Disclaimer
 
-- All Big R Radio logos, names, and related trademarks are the property of **Big R Radio**. This project is open source and is not affiliated with, endorsed by, or associated with Big R Radio.
-- The **80s Metal FM** logo asset was created using [Textstudio](https://www.textstudio.com/).
+- All Big R Radio logos, names, and related trademarks are the property of **Big R Radio**. This project is open source and is not affiliated with, endorsed by, or associated with Big R Radio
+- Unless otherwise Stated, all logo assets were created using [Textstudio](https://www.textstudio.com/)
 - The **90s Alternative Rock** logo asset was created using a free version of a font from [Jetsmax](https://www.dafont.com/alternative-rock.font?text=90s+Alternative+Rock)
-- The **Classic RnB** logo asset was created 
-
+- The **100.5 Classic Rock** and **100.3 The Rock Mix** logo assets were created originaly
+- 
 ### AI Disclaimer: No AI was used in the development of this Application whatsoever.
