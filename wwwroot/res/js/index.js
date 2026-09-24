@@ -36,7 +36,6 @@ class RadioListManager {
     constructor(){
         this.radioList = document.getElementById("RadioList");
         this.buildOption();
-        this.restoreRadio();
         this.radioList.addEventListener("input", ()=>{
             this.goToRadio(this.radioList.value);
         });
@@ -61,16 +60,18 @@ class RadioListManager {
             const singleData = Data[i];
             this.createOption(singleData.id,singleData.name);
         }
-        this.radioList.value = "";
+        this.restoreRadio();
     }
 
     restoreRadio(){
         if (window.localStorage.getItem("id")) {
             let id = window.localStorage.getItem("id");
             this.goToRadio(id);
+            this.radioList.value = id;
         }
         else {
             this.goToRadio("a55004");
+            this.radioList.value = "a55004";
         }
     }
 
@@ -89,7 +90,6 @@ class RadioListManager {
     goToRadio(id){
         post('channel:' + id);
         this.chanceHeadline(id);
-        this.radioList.value = "";
         window.localStorage.setItem("id", id);
     }
 }
@@ -98,7 +98,7 @@ const radioListManager = new RadioListManager;
 
 //function
 function setVolume(volume) {
-    post('vol:' + volume);
+   post('vol:' + volume);
 }
 
 function post(data) {
