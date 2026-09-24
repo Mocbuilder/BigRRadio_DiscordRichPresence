@@ -1,62 +1,77 @@
 [
   {
     "id": "a88059",
-    "name": "Big R Radio - 90s Alternative Rock"
+    "name": "90s Alternative Rock",
+    "color": "#5e00000"
   },
   {
     "id": "a85102",
-    "name": "Big R Radio - Classic RnB"
+    "name": "Classic RnB",
+    "color": "#5e00000"
   },
   {
     "id": "a71473",
-    "name": "Big R Radio - 80s and 90s Pop Mix"
+    "name": "80s and 90s Pop Mix",
+    "color": "#5e00000"
   },
   {
     "id": "a29874",
-    "name": "Big R Radio - 70s FM"
+    "name": "70s FM",
+    "color": "#5e00000"
   },
   {
     "id": "a01656",
-    "name": "Big R Radio - 100.7 The Mix"
+    "name": "100.7 The Mix",
+    "color": "#5e00000"
   },
   {
     "id": "a07233",
-    "name": "Big R Radio - 100.5 Classic Rock"
+    "name": "100.5 Classic Rock",
+    "color": "#5e00000"
   },
   {
     "id": "a75424",
-    "name": "Big R Radio - 100.3 The Rock Mix"
+    "name": "100.3 The Rock Mix",
+    "color": "#5e00000"
   },
   {
     "id": "a75124",
-    "name": "Big R Radio - Alternative Rock"
+    "name": "Alternative Rock",
+    "color": "#5e00000"
   },
   {
     "id": "a13070",
-    "name": "Big R Radio - One Faith - Hits"
+    "name": "One Faith - Hits",
+    "color": "#5e00000"
   },
   {
     "id": "a01303",
-    "name": "Big R Radio - 70s and 80s Pop Mix"
+    "name": "70s and 80s Pop Mix",
+    "color": "#5e00000"
   },
   {
     "id": "a12025",
-    "name": "Big R Radio - 80s FM"
+    "name": "80s FM",
+    "color": "#5e00000"
   },
   {
     "id": "a13173",
-    "name": "Big R Radio - 80s Lite"
+    "name": "80s Lite",
+    "color": "#5e00000"
   },
   {
     "id": "a55004",
-    "name": "Big R Radio - 80s Metal FM"
+    "name": "80s Metal FM",
+    "color": "#5e00000"
   },
   {
     "id": "a26718",
-    "name": "Big R Radio - 100.9 Star Country!"
+    "name": "100.9 Star Country!",
+    "color": "#5e00000"
   },
   {
     "id": "a31424",
-    "name": "Big R Radio - 100.8 The Hawk!!"
+    "name": "100.8 The Hawk!!",
+    "color": "#5e00000"
   }
 ]
