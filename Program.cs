@@ -59,34 +59,6 @@ namespace BigRRadio_DiscordRichPresence
                     if (_mediaPlayer == null || _discordClient == null) return;
 
                     ParseMessage(message);
-
-                    /*
-                    if (message == "toggle")
-                    {
-                        if (_mediaPlayer.IsPlaying)
-                            _mediaPlayer.Volume = 0;
-                        else
-                            _mediaPlayer.Volume = 100;
-                    }
-                    else if (message.StartsWith("vol:"))
-                    {
-                        if (int.TryParse(message.Substring(4), out int volume))
-                        {
-                            _mediaPlayer.Volume = volume;
-                        }
-                    }
-                    else if (message.StartsWith("channel:"))
-                    {
-                        string stationId = message.Substring(8);
-
-                        // Supports both full URLs and raw station IDs (e.g. "a55004")
-                        string newApiUrl = stationId.StartsWith("http")
-                            ? stationId
-                            : $"https://api.live365.com/station/{stationId}";
-
-                        _ = SetNewStreamAsync(newApiUrl);
-                    }
-                    */
                 });
 
                 Task.Run(async () =>
@@ -176,6 +148,7 @@ namespace BigRRadio_DiscordRichPresence
                 }
             }
             */
+
             private static string ExtractResourceToTempFile(string resourceName)
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
@@ -203,7 +176,7 @@ namespace BigRRadio_DiscordRichPresence
                 CurrentApiUrl = apiUrl;
 
                 StreamInfo? streamInfo = await GetStreamInfoAsync(CurrentApiUrl);
-                if (streamInfo == null || string.IsNullOrEmpty(streamInfo.StreamHlsUrl))
+                if (streamInfo == null || string.IsNullOrEmpty(streamInfo.StreamUrl))
                 {
                     Console.WriteLine("Failed to parse station info or missing audio stream URL.");
                     return;
@@ -212,7 +185,7 @@ namespace BigRRadio_DiscordRichPresence
                 _mediaPlayer?.Stop();
                 _media?.Dispose();
 
-                _media = new Media(_libVLC, new Uri(streamInfo.StreamHlsUrl), ":no-video");
+                _media = new Media(_libVLC, new Uri(streamInfo.StreamUrl), ":no-video");
                 _mediaPlayer?.Play(_media);
 
                 UpdatePresenceAndUI(streamInfo);
