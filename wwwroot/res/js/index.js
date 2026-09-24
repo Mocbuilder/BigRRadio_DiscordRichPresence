@@ -10,7 +10,6 @@ class RadioManager {
 
         this.addEvent();
         this.buildOption();
-        this.restoreRadio();
 
         window.external.receiveMessage(rawJson => {
             const data = JSON.parse(rawJson)["current-track"];
@@ -45,6 +44,7 @@ class RadioManager {
             const singleData = Data[i];
             this.createOption(singleData.id,singleData.name);
         }
+        this.restoreRadio();
     }
 
     async getData() {
