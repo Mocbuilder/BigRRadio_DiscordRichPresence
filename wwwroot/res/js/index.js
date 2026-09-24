@@ -62,6 +62,7 @@ class RadioManager {
     goToRadio(id){
         this.post('channel:' + id);
         this.chanceHeadline(id);
+        this.chanceColor(id);
         window.localStorage.setItem("id", id);
     }
 
@@ -75,6 +76,12 @@ class RadioManager {
         catch{
             Headline.src = `./res/img/icon_error.png`
         }
+    }
+
+    async chanceColor(id){
+        const Data = await this.getData(); 
+        const Hex = Data.find(item => item.id === id)?.color;
+        document.documentElement.style.setProperty('--main', Hex);
     }
 
     restoreRadio(){
