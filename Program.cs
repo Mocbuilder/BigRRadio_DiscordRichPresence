@@ -23,6 +23,8 @@ namespace BigRRadio_DiscordRichPresence
             private static Timer? _metadataTimer;
 
             public static string CurrentApiUrl { get; private set; } = InitialApiUrl;
+            public static int CurrentVolume = 75;
+            public static bool IsPlaying { get; private set; } = true;
 
             private const string InitialApiUrl = "https://api.live365.com/station/a55004";
             private const string DiscordAppId = "1537901110067470397";
@@ -94,12 +96,19 @@ namespace BigRRadio_DiscordRichPresence
                 switch (message)
                 {
                     case "toggle":
-                        _mediaPlayer.Volume = _mediaPlayer.IsPlaying ? 0 : 100;
+                        IsPlaying = !IsPlaying;
+                        _mediaPlayer.Volume = _mediaPlayer.Volume > 0 ? 0 : CurrentVolume;
                         break;
 
                     case string s when s.StartsWith("vol:"):
+                        if (!IsPlaying && int.TryParse(s.Substring(4), out int result))
+                        {
+                            CurrentVolume = result;
+                            break;
+                        }
                         if (int.TryParse(s.Substring(4), out int volume))
                         {
+                            CurrentVolume = volume;
                             _mediaPlayer.Volume = volume;
                         }
                         break;
