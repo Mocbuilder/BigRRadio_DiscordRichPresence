@@ -61,11 +61,13 @@ namespace BigRRadio_DiscordRichPresence
                     ParseMessage(message);
                 });
 
+                /*
                 Task.Run(async () =>
                 {
                     await Task.Delay(1000);
                     await SetNewStreamAsync(InitialApiUrl);
                 });
+                */
 
                 _metadataTimer = new Timer(async _ => await RefreshMetadataAsync(), null, 15000, 15000);
 
